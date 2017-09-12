@@ -2,7 +2,7 @@
 
 # RxFireBox
 
-The simple wrapper for encapsulate rxjava and firebase.
+The simple wrapper to encapsulate rxjava and firebase.
 
 ### Libraries
   - RxJava2
@@ -10,7 +10,7 @@ The simple wrapper for encapsulate rxjava and firebase.
   - Firebase Storage
   - Firebase Database
 
-### How use
+### How to use
 
 Add in build.gradle
 ```gradle
