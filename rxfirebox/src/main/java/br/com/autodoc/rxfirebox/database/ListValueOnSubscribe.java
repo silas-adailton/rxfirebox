@@ -43,7 +43,8 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
         public void onDataChange(DataSnapshot dataSnapshot) {
 
             try {
-                subscriber.onNext(marshaller.apply(dataSnapshot));
+                if(null != marshaller.apply(dataSnapshot))
+                    subscriber.onNext(marshaller.apply(dataSnapshot));
             } catch (Exception e) {
                 subscriber.onError(e);
             }
