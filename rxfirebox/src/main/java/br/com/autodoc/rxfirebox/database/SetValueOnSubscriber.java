@@ -21,14 +21,7 @@ public class SetValueOnSubscriber<T> implements CompletableOnSubscribe {
 
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
-        databaseReference.setValue(value).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override public void onSuccess(Void aVoid) {
-                e.onComplete();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override public void onFailure(@NonNull Exception exception) {
-                e.onError(exception);
-            }
-        });
+        databaseReference.setValue(value);
+        e.onComplete();
     }
 }
