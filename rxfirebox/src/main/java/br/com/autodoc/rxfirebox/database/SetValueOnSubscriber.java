@@ -1,13 +1,11 @@
 package br.com.autodoc.rxfirebox.database;
 
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 
+import io.reactivex.Completable;
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
-import io.reactivex.annotations.NonNull;
 
 public class SetValueOnSubscriber<T> implements CompletableOnSubscribe {
 
@@ -22,6 +20,6 @@ public class SetValueOnSubscriber<T> implements CompletableOnSubscribe {
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
         databaseReference.setValue(value);
-        e.onComplete();
+        Completable.complete();
     }
 }
