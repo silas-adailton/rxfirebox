@@ -22,7 +22,7 @@ public class UpdateValueOnSubscriber<T> implements CompletableOnSubscribe {
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
         databaseReference.updateChildren((Map<String, Object>) value);
-        Completable.complete();
+        e.onComplete();
     }
     
 }

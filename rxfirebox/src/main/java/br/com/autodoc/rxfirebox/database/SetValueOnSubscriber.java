@@ -20,6 +20,6 @@ public class SetValueOnSubscriber<T> implements CompletableOnSubscribe {
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
         databaseReference.setValue(value);
-        Completable.complete();
+        e.onComplete();
     }
 }
