@@ -11,15 +11,13 @@ import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 
-public class FooFirebaseRepository {
+public class FooFirebaseRepository extends Box<Foo> {
     private final DatabaseReference databaseReference;
     private final DatabaseBox databaseBox;
-    private final Box<Foo> box;
 
-    public FooFirebaseRepository(DatabaseReference databaseReference, DatabaseBox databaseBox, Box<Foo> box) {
+    public FooFirebaseRepository(DatabaseReference databaseReference, DatabaseBox databaseBox) {
         this.databaseReference = databaseReference;
         this.databaseBox = databaseBox;
-        this.box = box;
     }
 
     public Completable save(Foo foo) {
@@ -28,11 +26,11 @@ public class FooFirebaseRepository {
 
     public Maybe<List<Foo>> single() {
         Query query = databaseReference.orderByValue().equalTo(false);
-        return databaseBox.single(query, box.toList());
+        return databaseBox.single(query, toList());
     }
 
     public Flowable<List<Foo>> list() {
         Query query = databaseReference.orderByValue();
-        return databaseBox.list(query, box.toList());
+        return databaseBox.list(query, toList());
     }
 }

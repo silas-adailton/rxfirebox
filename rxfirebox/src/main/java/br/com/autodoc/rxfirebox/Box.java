@@ -4,6 +4,7 @@ package br.com.autodoc.rxfirebox;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.GenericTypeIndicator;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +14,8 @@ import io.reactivex.functions.Function;
 
 public class Box<T> {
 
-    private final Class<T> clazz;
-
-    public Box(Class<T> clazz) {
-        this.clazz = clazz;
+    private Class<T> getMyType() {
+        return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     public Function<DataSnapshot, List<T>> toList() {
@@ -25,7 +24,7 @@ public class Box<T> {
             if (dataSnapshot.hasChildren()) {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                 for (DataSnapshot child : children) {
-                    list.add(child.getValue(clazz));
+                    list.add(child.getValue(getMyType()));
                 }
             }
             return list;
@@ -33,7 +32,7 @@ public class Box<T> {
     }
 
     public Function<DataSnapshot, T> toClass() {
-        return dataSnapshot -> dataSnapshot.getValue(clazz);
+        return dataSnapshot -> dataSnapshot.getValue(getMyType());
     }
 
 
@@ -58,7 +57,7 @@ public class Box<T> {
             if (dataSnapshot.hasChildren()) {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                 for (DataSnapshot child : children) {
-                    return child.getValue(clazz);
+                    return child.getValue(getMyType());
                 }
             }
             return null;
