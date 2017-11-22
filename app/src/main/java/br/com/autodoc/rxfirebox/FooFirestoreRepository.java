@@ -29,7 +29,7 @@ public class FooFirestoreRepository extends FirestoreBox<Foo> {
 
     public Maybe<List<Foo>> single() {
         Query query = reference;
-        return box.single(query, toFirst());
+        return box.single(query, toList());
     }
 
     public Flowable<List<Foo>> where(String name) {
