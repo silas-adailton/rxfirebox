@@ -14,7 +14,7 @@ public class UpdateValueOnSubscriber<T> implements CompletableOnSubscribe {
     private final Map<String, T>  value;
     private final DatabaseReference databaseReference;
 
-    UpdateValueOnSubscriber(Map<String, T> value, DatabaseReference databaseReference) {
+    public UpdateValueOnSubscriber(Map<String, T> value, DatabaseReference databaseReference) {
         this.value = value;
         this.databaseReference = databaseReference;
     }

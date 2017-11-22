@@ -10,7 +10,7 @@ import io.reactivex.CompletableOnSubscribe;
 public class RemoveValueOnSubscriber implements CompletableOnSubscribe {
     private final DatabaseReference databaseReference;
 
-    RemoveValueOnSubscriber(DatabaseReference databaseReference) {
+    public RemoveValueOnSubscriber(DatabaseReference databaseReference) {
         this.databaseReference = databaseReference;
     }
 

@@ -12,7 +12,7 @@ public class SetValueOnSubscriber<T> implements CompletableOnSubscribe {
     private final T value;
     private final DatabaseReference databaseReference;
 
-    SetValueOnSubscriber(T value, DatabaseReference databaseReference) {
+    public SetValueOnSubscriber(T value, DatabaseReference databaseReference) {
         this.value = value;
         this.databaseReference = databaseReference;
     }
