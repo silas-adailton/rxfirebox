@@ -35,7 +35,7 @@ public class AddValueOnSubscriber<T> implements CompletableOnSubscribe {
 
     }
 
-    private static class RxCompletionListener<T> implements OnSuccessListener<QuerySnapshot>,OnFailureListener {
+    private static class RxCompletionListener<T> implements OnSuccessListener<DocumentReference>,OnFailureListener {
 
         private final CompletableEmitter subscriber;
 
@@ -44,7 +44,7 @@ public class AddValueOnSubscriber<T> implements CompletableOnSubscribe {
         }
 
         @Override
-        public void onSuccess(@NonNull QuerySnapshot documentSnapshots) {
+        public void onSuccess(@NonNull DocumentReference documentReference) {
             subscriber.onComplete();
         }
 
