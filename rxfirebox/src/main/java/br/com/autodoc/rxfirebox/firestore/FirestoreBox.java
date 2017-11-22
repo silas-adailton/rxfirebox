@@ -1,8 +1,8 @@
-package br.com.autodoc.rxfirebox.database;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
+package br.com.autodoc.rxfirebox.firestore;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.functions.Function;
 
-public class DatabaseBox {
+public class FirestoreBox {
 
     /**
      * Run the query once and cancel the listener
@@ -22,7 +22,7 @@ public class DatabaseBox {
      * @param <T> type of the return
      * @return return type converted in marshaller
      */
-    public <T> Maybe<T> single(Query query, Function<DataSnapshot, T> marshaller) {
+    public <T> Maybe<T> single(Query query, Function<QuerySnapshot, T> marshaller) {
         return Maybe.create(new SingleValueOnSubscribe<>(query, marshaller));
     }
 
@@ -34,7 +34,7 @@ public class DatabaseBox {
      * @param <T> Type of the return
      * @return return type converted in marshaller
      */
-    public <T> Flowable<T> list(Query query, Function<DataSnapshot, T> marshaller) {
+    public <T> Flowable<T> list(Query query, Function<QuerySnapshot, T> marshaller) {
         return Flowable.create(new ListValueOnSubscribe<>(query, marshaller), BackpressureStrategy.BUFFER);
     }
 
@@ -42,35 +42,34 @@ public class DatabaseBox {
      * Create value in database
      *
      * @param value data create in database
-     * @param databaseReference where the data will be saved
+     * @param reference where the data will be saved
      * @param <T> Type of the value
      * @return success or error
      */
-    public <T> Completable set(T value, DatabaseReference databaseReference) {
-        return Completable.create(new SetValueOnSubscriber<T>(value, databaseReference));
+    public <T> Completable set(Map<String, T> value, DocumentReference reference) {
+        return Completable.create(new SetValueOnSubscriber<T>(value, reference));
     }
 
     /**
      * update value in database
      *
      * @param value data create in database
-     * @param databaseReference where the data will be saved
+     * @param reference where the data will be saved
      * @param <T> Type of the value
      * @return success or error
      */
-    public <T> Completable update(Map<String, T> value, DatabaseReference databaseReference) {
-        return Completable.create(new UpdateValueOnSubscriber<T>(value, databaseReference));
+    public <T> Completable add(Map<String, T> value, CollectionReference reference) {
+        return Completable.create(new AddValueOnSubscriber<T>(value, reference));
     }
 
     /**
      *
      * remove end point in database
      *
-     * @param databaseReference reference that be removed
+     * @param reference reference that be removed
      * @return success or error
      */
-    public Completable remove(DatabaseReference databaseReference) {
-        return Completable.create(new RemoveValueOnSubscriber(databaseReference));
+    public Completable remove(DocumentReference reference) {
+        return Completable.create(new RemoveValueOnSubscriber(reference));
     }
-
 }
