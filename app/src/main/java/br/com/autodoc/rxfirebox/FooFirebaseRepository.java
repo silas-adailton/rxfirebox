@@ -6,16 +6,16 @@ import com.google.firebase.database.Query;
 
 import java.util.List;
 
-import br.com.autodoc.rxfirebox.database.DatabaseBox;
+import br.com.autodoc.rxfirebox.database.DatabaseObserver;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 
-public class FooFirebaseRepository extends Box<Foo> {
+public class FooFirebaseRepository extends DatabaseBox<Foo> {
     private final DatabaseReference databaseReference;
-    private final DatabaseBox databaseBox;
+    private final DatabaseObserver databaseBox;
 
-    public FooFirebaseRepository(DatabaseReference databaseReference, DatabaseBox databaseBox) {
+    public FooFirebaseRepository(DatabaseReference databaseReference, DatabaseObserver databaseBox) {
         this.databaseReference = databaseReference;
         this.databaseBox = databaseBox;
     }

@@ -2,24 +2,21 @@ package br.com.autodoc.rxfirebox;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.autodoc.rxfirebox.database.DatabaseBox;
-import br.com.autodoc.rxfirebox.firestore.FirestoreBox;
+import br.com.autodoc.rxfirebox.firestore.FirestoreObserver;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.functions.Function;
 
-public class FooFirestoreRepository extends Box<Foo> {
+public class FooFirestoreRepository extends FirestoreBox<Foo> {
     private final CollectionReference reference;
-    private final FirestoreBox box;
+    private final FirestoreObserver box;
 
-    public FooFirestoreRepository(CollectionReference reference, FirestoreBox box) {
+    public FooFirestoreRepository(CollectionReference reference, FirestoreObserver box) {
         this.reference = reference;
         this.box = box;
     }
@@ -32,11 +29,11 @@ public class FooFirestoreRepository extends Box<Foo> {
 
     public Maybe<List<Foo>> single() {
         Query query = reference;
-        return box.single(query, toDocumentList());
+        return box.single(query, toFirst());
     }
 
     public Flowable<List<Foo>> where(String name) {
         Query query = reference.whereEqualTo("name",name);
-        return box.list(query, toDocumentList());
+        return box.list(query, toList());
     }
 }
