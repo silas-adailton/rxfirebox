@@ -32,7 +32,7 @@ public class RemoveValueOnSubscriber<T> implements CompletableOnSubscribe {
 
     }
 
-    private static class RxCompletionListener<T> implements OnSuccessListener<QuerySnapshot>,OnFailureListener {
+    private static class RxCompletionListener<T> implements OnSuccessListener<Void>,OnFailureListener {
 
         private final CompletableEmitter subscriber;
 
@@ -41,7 +41,7 @@ public class RemoveValueOnSubscriber<T> implements CompletableOnSubscribe {
         }
 
         @Override
-        public void onSuccess(@NonNull QuerySnapshot documentSnapshots) {
+        public void onSuccess(@NonNull Void aVoid) {
             subscriber.onComplete();
         }
 
