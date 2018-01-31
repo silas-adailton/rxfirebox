@@ -8,6 +8,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,7 +46,7 @@ public class DatabaseBox<T> implements Box {
 
         return dataSnapshot -> {
 
-            Map<String, Object> stringMap = null;
+            Map<String, Object> stringMap = new HashMap<>();
 
             if (dataSnapshot.hasChildren())
                 stringMap = (Map<String, Object>) dataSnapshot.getValue();
@@ -76,7 +77,7 @@ public class DatabaseBox<T> implements Box {
             GenericTypeIndicator<Map<String, Boolean>> map = new GenericTypeIndicator<Map<String, Boolean>>() {
             };
 
-            Map<String, Boolean> stringMap = null;
+            Map<String, Boolean> stringMap = new HashMap<>();
 
             if (dataSnapshot.hasChildren())
                 stringMap = dataSnapshot.getValue(map);
