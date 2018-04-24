@@ -41,7 +41,7 @@ public class StorageBox {
      * @return Upload object with information of upload
      */
     public Flowable<Upload> uploadMetadata(Uri file, StorageReference storageReference, StorageMetadata storageMetadata) {
-        return Flowable.create(new UploadSubscriber(file, storageReference), BackpressureStrategy.BUFFER);
+        return Flowable.create(new UploadMetadaSubscriber(file, storageReference, storageMetadata), BackpressureStrategy.BUFFER);
     }
 
     /**
