@@ -2,9 +2,10 @@ package br.com.autodoc.rxfirebox.firestore;
 
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import io.reactivex.MaybeEmitter;
 import io.reactivex.MaybeOnSubscribe;
@@ -13,10 +14,10 @@ import io.reactivex.functions.Function;
 public class DocumentValueOnSubscribe<T> implements MaybeOnSubscribe<T> {
 
     private DocumentReference mDocument;
-    private Function<QuerySnapshot, T> mMarshaller;
+    private Function<DocumentSnapshot, T> mMarshaller;
 
 
-    public DocumentValueOnSubscribe(DocumentReference documentReference, Function<QuerySnapshot, T> marshaller) {
+    public DocumentValueOnSubscribe(DocumentReference documentReference, Function<DocumentSnapshot, T> marshaller) {
         mDocument = documentReference;
         mMarshaller = marshaller;
     }
@@ -27,18 +28,18 @@ public class DocumentValueOnSubscribe<T> implements MaybeOnSubscribe<T> {
         mDocument.addSnapshotListener(eventListener);
     }
 
-    private static class RxSingleValueListener<T> implements EventListener<QuerySnapshot> {
+    private static class RxSingleValueListener<T> implements EventListener<DocumentSnapshot> {
 
         private final MaybeEmitter<T> subscriber;
-        private final Function<QuerySnapshot, T> marshaller;
+        private final Function<DocumentSnapshot, T> marshaller;
 
-        RxSingleValueListener(MaybeEmitter<T> subscriber, Function<QuerySnapshot, T> marshaller) {
+        RxSingleValueListener(MaybeEmitter<T> subscriber, Function<DocumentSnapshot, T> marshaller) {
             this.subscriber = subscriber;
             this.marshaller = marshaller;
         }
 
         @Override
-        public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+        public void onEvent(DocumentSnapshot documentSnapshots, FirebaseFirestoreException e) {
 
             if(null != e)
                 subscriber.onError(e);
