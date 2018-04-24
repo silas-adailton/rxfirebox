@@ -34,6 +34,7 @@ public class FirestoreBox<T> implements Box {
         };
     }
 
+
     @Override
     public Function<DocumentSnapshot, T> toClass() {
         return documentSnapshot -> documentSnapshot.toObject(getMyType());
@@ -62,6 +63,17 @@ public class FirestoreBox<T> implements Box {
                 for (DocumentSnapshot document : documents) {
                     return document.toObject(getMyType());
                 }
+            }
+            return null;
+        };
+    }
+
+    @Override
+    public Function<DocumentSnapshot, T> toDocument() {
+
+        return querySnapshot -> {
+            if (querySnapshot.exists()) {
+                return querySnapshot.toObject(getMyType());
             }
             return null;
         };

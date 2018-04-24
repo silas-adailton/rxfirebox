@@ -26,6 +26,8 @@ public interface Box<T> {
 
     public Function<Object, T> toFirst();
 
+    public Function<Object, T> toDocument();
+
     public Function<Object, Set<String>> toSet();
 
 }
