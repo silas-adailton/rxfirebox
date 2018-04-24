@@ -71,11 +71,6 @@ public class DatabaseBox<T> implements Box {
     }
 
     @Override
-    public Function toDocument() {
-        return null;
-    }
-
-    @Override
     public Function<DataSnapshot, Set<String>> toSet() {
 
         return dataSnapshot -> {

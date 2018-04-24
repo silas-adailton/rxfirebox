@@ -68,16 +68,6 @@ public class FirestoreBox<T> implements Box {
         };
     }
 
-    @Override
-    public Function<DocumentSnapshot, T> toDocument() {
-
-        return querySnapshot -> {
-            if (querySnapshot.exists()) {
-                return querySnapshot.toObject(getMyType());
-            }
-            return null;
-        };
-    }
 
     @Override
     public Function<QuerySnapshot, Set<String>> toSet() {
