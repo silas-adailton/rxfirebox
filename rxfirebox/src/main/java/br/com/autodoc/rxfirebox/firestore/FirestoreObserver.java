@@ -27,6 +27,18 @@ public class FirestoreObserver {
     }
 
     /**
+     * Run the query once and cancel the listener
+     *
+     * @param documentReference firebase query
+     * @param marshaller function to convert data
+     * @param <T> type of the return
+     * @return return type converted in marshaller
+     */
+    public <T> Maybe<T> single(DocumentReference documentReference, Function<QuerySnapshot, T> marshaller) {
+        return Maybe.create(new DocumentValueOnSubscribe<>(documentReference, marshaller));
+    }
+
+    /**
      * Run the query and not cancel the listener
      *
      * @param query firebase query
