@@ -1,6 +1,7 @@
 package br.com.autodoc.rxfirebox.firestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -34,7 +35,7 @@ public class FirestoreObserver {
      * @param <T> type of the return
      * @return return type converted in marshaller
      */
-    public <T> Maybe<T> single(DocumentReference documentReference, Function<QuerySnapshot, T> marshaller) {
+    public <T> Maybe<T> single(DocumentReference documentReference, Function<DocumentSnapshot, T> marshaller) {
         return Maybe.create(new DocumentValueOnSubscribe<>(documentReference, marshaller));
     }
 
