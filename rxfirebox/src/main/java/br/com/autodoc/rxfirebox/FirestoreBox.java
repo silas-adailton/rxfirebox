@@ -20,22 +20,7 @@ public class FirestoreBox<T> implements Box {
         return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
-    @Override
     public Function<QuerySnapshot, List<T>> toList() {
-
-        return querySnapshot -> {
-            List<T> list = new ArrayList<>();
-            if (querySnapshot.size() > 0) {
-                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-                for (DocumentSnapshot document : documents) {
-                    list.add(document.toObject(getMyType()));
-                }
-            }
-            return list;
-        };
-    }
-
-    public Function<QuerySnapshot, List<T>> toListChances() {
 
         return querySnapshot -> {
             List<T> list = new ArrayList<>();

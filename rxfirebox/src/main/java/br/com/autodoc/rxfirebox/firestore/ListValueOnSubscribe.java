@@ -51,8 +51,6 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
                 } catch (Exception e1) {
                     subscriber.onError(e1);
                 }
-
-                subscriber.onComplete();
             }
         }
     }
