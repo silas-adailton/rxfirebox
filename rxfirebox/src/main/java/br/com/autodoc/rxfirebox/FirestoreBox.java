@@ -25,6 +25,20 @@ public class FirestoreBox<T> implements Box {
         return querySnapshot -> {
             List<T> list = new ArrayList<>();
             if (querySnapshot.size() > 0) {
+                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+                for (DocumentSnapshot document : documents) {
+                    list.add(document.toObject(getMyType()));
+                }
+            }
+            return list;
+        };
+    }
+
+    public Function<QuerySnapshot, List<T>> toListChanges() {
+
+        return querySnapshot -> {
+            List<T> list = new ArrayList<>();
+            if (querySnapshot.size() > 0) {
                 List<DocumentChange> documents = querySnapshot.getDocumentChanges();
                 for (DocumentChange document : documents) {
                     list.add(document.getDocument().toObject(getMyType()));

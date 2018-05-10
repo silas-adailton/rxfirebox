@@ -10,13 +10,13 @@ import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.functions.Function;
 
-public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
+public class ListValueChangesOnSubscribe<T> implements FlowableOnSubscribe<T> {
 
     private Query mQuery;
     private Function<DataSnapshot, T> mMarshaller;
 
 
-    public ListValueOnSubscribe(Query query, Function<DataSnapshot, T> marshaller) {
+    public ListValueChangesOnSubscribe(Query query, Function<DataSnapshot, T> marshaller) {
         mQuery = query;
         mMarshaller = marshaller;
     }
@@ -45,11 +45,11 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
             try {
                 if(null != marshaller.apply(dataSnapshot))
                     subscriber.onNext(marshaller.apply(dataSnapshot));
+                else
+                    subscriber.onComplete();
             } catch (Exception e) {
                 subscriber.onError(e);
             }
-
-            subscriber.onComplete();
 
         }
 

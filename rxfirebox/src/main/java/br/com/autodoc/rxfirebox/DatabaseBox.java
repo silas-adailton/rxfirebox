@@ -37,6 +37,21 @@ public class DatabaseBox<T> implements Box {
     }
 
     @Override
+    public Function<DataSnapshot, List<T>> toListChanges() {
+        return dataSnapshot -> {
+            List<T> list = new ArrayList<>();
+            if (dataSnapshot.hasChildren()) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot child : children) {
+                    list.add(child.getValue(getMyType()));
+                }
+            }
+            return list;
+        };
+    }
+
+
+    @Override
     public Function<DataSnapshot, T> toClass() {
         return dataSnapshot -> dataSnapshot.getValue(getMyType());
     }

@@ -1,8 +1,6 @@
 package br.com.autodoc.rxfirebox.firestore;
 
-
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -23,12 +21,12 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
 
     @Override
     public void subscribe(FlowableEmitter<T> e) throws Exception {
-        EventListener eventListener = new RxSingleValueListener<>(e, mMarshaller);
-        mQuery.addSnapshotListener(eventListener);
+        OnSuccessListener onSuccessListener = new RxSingleValueListener<>(e, mMarshaller);
+        mQuery.get().addOnSuccessListener(onSuccessListener);
     }
 
 
-    private static class RxSingleValueListener<T> implements EventListener<QuerySnapshot> {
+    private static class RxSingleValueListener<T> implements OnSuccessListener<QuerySnapshot> {
 
         private final FlowableEmitter<T> subscriber;
         private final Function<QuerySnapshot, T> marshaller;
@@ -38,20 +36,17 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
             this.marshaller = marshaller;
         }
 
-        @Override
-        public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
 
-            if(null != e)
+        @Override
+        public void onSuccess(QuerySnapshot querySnapshot) {
+            try {
+                if (null != marshaller.apply(querySnapshot))
+                    subscriber.onNext(marshaller.apply(querySnapshot));
+            } catch (Exception e) {
                 subscriber.onError(e);
-            else
-            {
-                try {
-                    if (null != marshaller.apply(documentSnapshots))
-                        subscriber.onNext(marshaller.apply(documentSnapshots));
-                } catch (Exception e1) {
-                    subscriber.onError(e1);
-                }
             }
+
+            subscriber.onComplete();
         }
     }
 }

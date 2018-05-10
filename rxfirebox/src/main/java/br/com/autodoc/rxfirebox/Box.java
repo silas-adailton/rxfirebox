@@ -20,6 +20,8 @@ public interface Box<T> {
 
     public Function<Object, List<T>> toList();
 
+    public Function<Object, List<T>> toListChanges();
+
     public Function<Object, T> toClass();
 
     public Function<Object, Map<String, Object>> toMap();
