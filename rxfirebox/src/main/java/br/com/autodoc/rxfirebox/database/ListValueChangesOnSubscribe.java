@@ -45,8 +45,6 @@ public class ListValueChangesOnSubscribe<T> implements FlowableOnSubscribe<T> {
             try {
                 if(null != marshaller.apply(dataSnapshot))
                     subscriber.onNext(marshaller.apply(dataSnapshot));
-                else
-                    subscriber.onComplete();
             } catch (Exception e) {
                 subscriber.onError(e);
             }
