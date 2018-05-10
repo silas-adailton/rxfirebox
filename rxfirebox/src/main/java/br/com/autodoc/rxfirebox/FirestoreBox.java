@@ -1,6 +1,7 @@
 package br.com.autodoc.rxfirebox;
 
 
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -28,6 +29,20 @@ public class FirestoreBox<T> implements Box {
                 List<DocumentSnapshot> documents = querySnapshot.getDocuments();
                 for (DocumentSnapshot document : documents) {
                     list.add(document.toObject(getMyType()));
+                }
+            }
+            return list;
+        };
+    }
+
+    public Function<QuerySnapshot, List<T>> toListChances() {
+
+        return querySnapshot -> {
+            List<T> list = new ArrayList<>();
+            if (querySnapshot.size() > 0) {
+                List<DocumentChange> documents = querySnapshot.getDocumentChanges();
+                for (DocumentChange document : documents) {
+                    list.add(document.getDocument().toObject(getMyType()));
                 }
             }
             return list;
