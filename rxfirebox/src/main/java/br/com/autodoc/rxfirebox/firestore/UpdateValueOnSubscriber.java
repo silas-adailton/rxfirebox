@@ -25,8 +25,9 @@ public class UpdateValueOnSubscriber implements CompletableOnSubscribe {
 
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
-        reference.update(value)
-                .addOnCompleteListener(new RxCompletionListener(e));
+        //reference.update(value).addOnCompleteListener(new RxCompletionListener(e));
+        reference.update(value);
+        e.onComplete();
     }
 
     private static class RxCompletionListener implements OnCompleteListener<Void>{

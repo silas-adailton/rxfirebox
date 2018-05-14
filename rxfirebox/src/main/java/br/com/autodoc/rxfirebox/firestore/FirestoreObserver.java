@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.Map;
 
@@ -74,6 +75,17 @@ public class FirestoreObserver {
      */
     public <T> Completable set(Object value, DocumentReference reference) {
         return Completable.create(new SetValueOnSubscriber(value, reference));
+    }
+
+    /**
+     * Create value in database
+     *
+     * @param value data create in database
+     * @param <T> Type of the value
+     * @return success or error
+     */
+    public <T> Completable batch(WriteBatch value) {
+        return Completable.create(new BatchValueOnSubscriber(value));
     }
 
     /**

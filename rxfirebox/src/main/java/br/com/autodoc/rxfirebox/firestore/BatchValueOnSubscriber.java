@@ -4,31 +4,25 @@ package br.com.autodoc.rxfirebox.firestore;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
-
-import java.util.Map;
+import com.google.firebase.firestore.WriteBatch;
 
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
 
-public class SetValueOnSubscriber implements CompletableOnSubscribe {
+public class BatchValueOnSubscriber implements CompletableOnSubscribe {
 
-    private final Object value;
-    private final DocumentReference reference;
+    private final WriteBatch value;
 
-    public SetValueOnSubscriber(Object value, DocumentReference reference) {
+    public BatchValueOnSubscriber(WriteBatch value) {
         this.value = value;
-        this.reference = reference;
     }
 
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
-      //  reference.set(value).addOnCompleteListener(new RxCompletionListener(e));
-        reference.set(value);
-        e.onComplete();
+       //value.commit().addOnCompleteListener(new RxCompletionListener(e));
+        value.commit();
     }
 
     private static class RxCompletionListener implements OnCompleteListener<Void> {

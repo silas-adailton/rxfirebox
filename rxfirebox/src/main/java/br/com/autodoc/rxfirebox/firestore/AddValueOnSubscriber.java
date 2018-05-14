@@ -23,8 +23,9 @@ public class AddValueOnSubscriber implements CompletableOnSubscribe {
 
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
-        reference.add(value)
-                .addOnCompleteListener(new RxCompletionListener(e));
+        //reference.add(value).addOnCompleteListener(new RxCompletionListener(e));
+        reference.add(value);
+        e.onComplete();
     }
 
     private static class RxCompletionListener implements OnCompleteListener<DocumentReference>{
