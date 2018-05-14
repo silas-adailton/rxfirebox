@@ -37,7 +37,7 @@ public class AddValueOnSubscriber implements CompletableOnSubscribe {
 
         @Override
         public void onComplete(@NonNull Task<DocumentReference> task) {
-            if(task.getException() == null){
+            if(task.getException() != null){
                 subscriber.onError(task.getException());
             }else {
                 subscriber.onComplete();
