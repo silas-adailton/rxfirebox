@@ -3,35 +3,31 @@ package br.com.autodoc.rxfirebox.firestore;
 
 import android.support.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-
-import java.util.Map;
 
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
 
-public class AddValueOnSubscriber<T> implements CompletableOnSubscribe {
+public class AddValueOnSubscriber implements CompletableOnSubscribe {
 
-    private final Map<String, T>  value;
+    private final Object value;
     private final CollectionReference reference;
 
-    public AddValueOnSubscriber(Map<String, T> value, CollectionReference reference) {
+    public AddValueOnSubscriber(Object value, CollectionReference reference) {
         this.value = value;
         this.reference = reference;
     }
 
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
-        reference.add((Map<String, Object>) value)
-                .addOnSuccessListener(new RxCompletionListener(e))
-                .addOnFailureListener(new RxCompletionListener(e));
-
+        reference.add(value)
+                .addOnCompleteListener(new RxCompletionListener(e));
     }
 
-    private static class RxCompletionListener<T> implements OnSuccessListener<DocumentReference>,OnFailureListener {
+    private static class RxCompletionListener implements OnCompleteListener<DocumentReference>{
 
         private final CompletableEmitter subscriber;
 
@@ -40,13 +36,12 @@ public class AddValueOnSubscriber<T> implements CompletableOnSubscribe {
         }
 
         @Override
-        public void onSuccess(@NonNull DocumentReference documentReference) {
-            subscriber.onComplete();
-        }
-
-        @Override
-        public void onFailure(@NonNull Exception e) {
-            subscriber.onError(e);
+        public void onComplete(@NonNull Task<DocumentReference> task) {
+            if(task.getException() == null){
+                subscriber.onError(task.getException());
+            }else {
+                subscriber.onComplete();
+            }
         }
     }
 }

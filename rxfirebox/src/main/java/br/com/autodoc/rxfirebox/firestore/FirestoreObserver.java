@@ -72,8 +72,8 @@ public class FirestoreObserver {
      * @param <T> Type of the value
      * @return success or error
      */
-    public <T> Completable set(Map<String, T> value, DocumentReference reference) {
-        return Completable.create(new SetValueOnSubscriber<T>(value, reference));
+    public <T> Completable set(Object value, DocumentReference reference) {
+        return Completable.create(new SetValueOnSubscriber(value, reference));
     }
 
     /**
@@ -84,8 +84,8 @@ public class FirestoreObserver {
      * @param <T> Type of the value
      * @return success or error
      */
-    public <T> Completable add(Map<String, T> value, CollectionReference reference) {
-        return Completable.create(new AddValueOnSubscriber<T>(value, reference));
+    public <T> Completable add(Object value, CollectionReference reference) {
+        return Completable.create(new AddValueOnSubscriber(value, reference));
     }
 
     /**
@@ -97,5 +97,18 @@ public class FirestoreObserver {
      */
     public Completable remove(DocumentReference reference) {
         return Completable.create(new RemoveValueOnSubscriber(reference));
+    }
+
+
+    /**
+     * update value in database
+     *
+     * @param value data create in database
+     * @param reference where the data will be saved
+     * @param <T> Type of the value
+     * @return success or error
+     */
+    public <T> Completable update(Map<String,Object> value, DocumentReference reference) {
+        return Completable.create(new UpdateValueOnSubscriber(value, reference));
     }
 }
