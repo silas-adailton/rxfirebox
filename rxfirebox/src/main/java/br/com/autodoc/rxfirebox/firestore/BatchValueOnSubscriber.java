@@ -23,6 +23,7 @@ public class BatchValueOnSubscriber implements CompletableOnSubscribe {
     public void subscribe(CompletableEmitter e) throws Exception {
        //value.commit().addOnCompleteListener(new RxCompletionListener(e));
         value.commit();
+        e.onComplete();
     }
 
     private static class RxCompletionListener implements OnCompleteListener<Void> {
