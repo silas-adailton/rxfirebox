@@ -100,18 +100,4 @@ public class DatabaseBox<T> implements Box {
             return stringMap.keySet();
         };
     }
-
-    public Function<DataSnapshot, Set<Integer>> toSetInteger() {
-
-        return dataSnapshot -> {
-            GenericTypeIndicator<Map<Integer, Boolean>> map = new GenericTypeIndicator<Map<Integer, Boolean>>() {};
-
-            Map<Integer, Boolean> stringMap = new HashMap<>();
-
-            if (dataSnapshot.hasChildren())
-                stringMap = dataSnapshot.getValue(map);
-
-            return stringMap.keySet();
-        };
-    }
 }
