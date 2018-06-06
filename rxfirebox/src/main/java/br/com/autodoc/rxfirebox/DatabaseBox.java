@@ -9,6 +9,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -89,15 +90,17 @@ public class DatabaseBox<T> implements Box {
     public Function<DataSnapshot, Set<String>> toSet() {
 
         return dataSnapshot -> {
-            GenericTypeIndicator<Map<String, Boolean>> map = new GenericTypeIndicator<Map<String, Boolean>>() {
-            };
 
-            Map<String, Boolean> stringMap = new HashMap<>();
+            Set<String> keys = new HashSet<>();
 
-            if (dataSnapshot.hasChildren())
-                stringMap = dataSnapshot.getValue(map);
+            if (dataSnapshot.hasChildren()) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot child : children) {
+                    keys.add(child.getKey());
+                }
+            }
+            return keys;
 
-            return stringMap.keySet();
         };
     }
 }
