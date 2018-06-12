@@ -25,7 +25,7 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
     public void subscribe(FlowableEmitter<T> e) throws Exception {
         ValueEventListener listener = new RxSingleValueListener<>(e, mMarshaller);
         e.setCancellable(() -> mQuery.removeEventListener(listener));
-        mQuery.addValueEventListener(listener);
+        mQuery.addListenerForSingleValueEvent(listener);
     }
 
 

@@ -54,19 +54,6 @@ public class DatabaseObserver {
 
 
     /**
-     * Run the query and not cancel the listener
-     *
-     * @param query firebase query
-     * @param marshaller function to convert data
-     * @param <T> Type of the return
-     * @return return type converted in marshaller
-     */
-    public <T> Flowable<T> listChan(Query query, Function<DataSnapshot, T> marshaller) {
-        return Flowable.create(new ListValueOnSubscribe<>(query, marshaller), BackpressureStrategy.BUFFER);
-    }
-
-
-    /**
      * Create value in database
      *
      * @param value data create in database
