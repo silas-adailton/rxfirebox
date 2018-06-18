@@ -14,6 +14,16 @@ import io.reactivex.functions.Function;
 
 public class DatabaseObserver {
 
+    private final boolean useListener;
+
+    public DatabaseObserver() {
+        useListener = false;
+    }
+
+    public DatabaseObserver(boolean useListener) {
+        this.useListener = useListener;
+    }
+
     /**
      * Run the query once and cancel the listener
      *
@@ -62,7 +72,7 @@ public class DatabaseObserver {
      * @return success or error
      */
     public <T> Completable set(T value, DatabaseReference databaseReference) {
-        return Completable.create(new SetValueOnSubscriber<T>(value, databaseReference));
+        return Completable.create(new SetValueOnSubscriber<T>(value, databaseReference,useListener));
     }
 
     /**
@@ -74,7 +84,7 @@ public class DatabaseObserver {
      * @return success or error
      */
     public <T> Completable update(Map<String, T> value, DatabaseReference databaseReference) {
-        return Completable.create(new UpdateValueOnSubscriber<T>(value, databaseReference));
+        return Completable.create(new UpdateValueOnSubscriber<T>(value, databaseReference,useListener));
     }
 
     /**

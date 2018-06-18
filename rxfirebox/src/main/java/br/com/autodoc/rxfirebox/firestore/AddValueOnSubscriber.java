@@ -15,17 +15,22 @@ public class AddValueOnSubscriber implements CompletableOnSubscribe {
 
     private final Object value;
     private final CollectionReference reference;
+    private final boolean useListener;
 
-    public AddValueOnSubscriber(Object value, CollectionReference reference) {
+    public AddValueOnSubscriber(Object value, CollectionReference reference, boolean useListener) {
         this.value = value;
         this.reference = reference;
+        this.useListener = useListener;
     }
 
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
-        //reference.add(value).addOnCompleteListener(new RxCompletionListener(e));
-        reference.add(value);
-        e.onComplete();
+        if(useListener) {
+            reference.add(value).addOnCompleteListener(new RxCompletionListener(e));
+        }else {
+            reference.add(value);
+            e.onComplete();
+        }
     }
 
     private static class RxCompletionListener implements OnCompleteListener<DocumentReference>{

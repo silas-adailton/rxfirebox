@@ -16,6 +16,16 @@ import io.reactivex.functions.Function;
 
 public class FirestoreObserver {
 
+    private final boolean useListener;
+
+    public FirestoreObserver() {
+        useListener = false;
+    }
+
+    public FirestoreObserver(boolean useListener) {
+        this.useListener = useListener;
+    }
+
     /**
      * Run the query once and cancel the listener
      *
@@ -74,7 +84,7 @@ public class FirestoreObserver {
      * @return success or error
      */
     public <T> Completable set(Object value, DocumentReference reference) {
-        return Completable.create(new SetValueOnSubscriber(value, reference));
+        return Completable.create(new SetValueOnSubscriber(value, reference, useListener));
     }
 
     /**
@@ -85,7 +95,7 @@ public class FirestoreObserver {
      * @return success or error
      */
     public <T> Completable batch(WriteBatch value) {
-        return Completable.create(new BatchValueOnSubscriber(value));
+        return Completable.create(new BatchValueOnSubscriber(value, useListener));
     }
 
     /**
@@ -97,7 +107,7 @@ public class FirestoreObserver {
      * @return success or error
      */
     public <T> Completable add(Object value, CollectionReference reference) {
-        return Completable.create(new AddValueOnSubscriber(value, reference));
+        return Completable.create(new AddValueOnSubscriber(value, reference,useListener));
     }
 
     /**
@@ -121,6 +131,6 @@ public class FirestoreObserver {
      * @return success or error
      */
     public <T> Completable update(Map<String,Object> value, DocumentReference reference) {
-        return Completable.create(new UpdateValueOnSubscriber(value, reference));
+        return Completable.create(new UpdateValueOnSubscriber(value, reference, useListener));
     }
 }

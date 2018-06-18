@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Map;
@@ -17,17 +16,22 @@ public class UpdateValueOnSubscriber implements CompletableOnSubscribe {
 
     private final Map<String,Object> value;
     private final DocumentReference reference;
+    private final boolean useListener;
 
-    public UpdateValueOnSubscriber(Map<String,Object> value, DocumentReference reference) {
+    public UpdateValueOnSubscriber(Map<String, Object> value, DocumentReference reference, boolean useListener) {
         this.value = value;
         this.reference = reference;
+        this.useListener = useListener;
     }
 
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
-        //reference.update(value).addOnCompleteListener(new RxCompletionListener(e));
-        reference.update(value);
-        e.onComplete();
+        if(useListener) {
+            reference.update(value).addOnCompleteListener(new RxCompletionListener(e));
+        }else {
+            reference.update(value);
+            e.onComplete();
+        }
     }
 
     private static class RxCompletionListener implements OnCompleteListener<Void>{

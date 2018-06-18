@@ -8,6 +8,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,13 +61,15 @@ public class FirestoreBox<T> implements Box {
     public Function<QuerySnapshot, Map<String, Object>> toMap() {
 
         return querySnapshot -> {
+            Map<String, Object> stringMap = new HashMap<>();
+
             if (querySnapshot.size() > 0) {
                 List<DocumentSnapshot> documents = querySnapshot.getDocuments();
                 for (DocumentSnapshot document : documents) {
-                    return document.getData();
+                    stringMap.put(document.getId(),document);
                 }
             }
-            return null;
+            return stringMap;
         };
     }
 

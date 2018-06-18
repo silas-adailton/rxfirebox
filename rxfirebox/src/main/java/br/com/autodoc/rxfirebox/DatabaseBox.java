@@ -64,9 +64,12 @@ public class DatabaseBox<T> implements Box {
 
             Map<String, Object> stringMap = new HashMap<>();
 
-            if (dataSnapshot.hasChildren())
-                stringMap = (Map<String, Object>) dataSnapshot.getValue();
-
+            if (dataSnapshot.hasChildren()) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot child : children) {
+                    stringMap.put(child.getKey(),child);
+                }
+            }
             return stringMap;
         };
     }
