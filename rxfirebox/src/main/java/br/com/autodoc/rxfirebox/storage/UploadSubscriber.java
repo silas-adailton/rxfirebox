@@ -53,7 +53,7 @@ class UploadSubscriber implements FlowableOnSubscribe<Upload> {
     private void emitProgress(FlowableEmitter<Upload> e, UploadTask.TaskSnapshot taskSnapshot) {
         double progress = getProgress(taskSnapshot);
         Uri session = taskSnapshot.getUploadSessionUri();
-        Uri uri = taskSnapshot.getDownloadUrl();
+        Uri uri = taskSnapshot.getStorage().getDownloadUrl().getResult();
 
         if (session == null) {
             session = Uri.parse("");
