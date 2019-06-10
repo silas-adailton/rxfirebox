@@ -9,6 +9,7 @@ import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Map;
 
+import br.com.autodoc.rxfirebox.Executor;
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
 
@@ -27,7 +28,7 @@ public class UpdateValueOnSubscriber implements CompletableOnSubscribe {
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
         if(useListener) {
-            reference.update(value).addOnCompleteListener(new RxCompletionListener(e));
+            reference.update(value).addOnCompleteListener(Executor.Companion.executeThreadPoolExecutor(), new RxCompletionListener(e));
         }else {
             reference.update(value);
             e.onComplete();

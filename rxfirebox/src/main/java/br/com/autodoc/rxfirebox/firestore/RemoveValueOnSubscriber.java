@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 
+import br.com.autodoc.rxfirebox.Executor;
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
 
@@ -21,7 +22,7 @@ public class RemoveValueOnSubscriber<T> implements CompletableOnSubscribe {
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
         reference.delete()
-                .addOnSuccessListener(new RxCompletionListener(e))
+                .addOnSuccessListener(Executor.Companion.executeThreadPoolExecutor(), new RxCompletionListener(e))
                 .addOnFailureListener(new RxCompletionListener(e));
 
     }

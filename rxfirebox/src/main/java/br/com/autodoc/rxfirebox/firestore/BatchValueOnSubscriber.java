@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.WriteBatch;
 
+import br.com.autodoc.rxfirebox.Executor;
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
 
@@ -23,7 +24,7 @@ public class BatchValueOnSubscriber implements CompletableOnSubscribe {
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
        if(useListener) {
-           value.commit().addOnCompleteListener(new RxCompletionListener(e));
+           value.commit().addOnCompleteListener(Executor.Companion.executeThreadPoolExecutor(), new RxCompletionListener(e));
        }else {
            value.commit();
            e.onComplete();

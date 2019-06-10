@@ -7,6 +7,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import br.com.autodoc.rxfirebox.Executor;
 import io.reactivex.MaybeEmitter;
 import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.functions.Function;
@@ -25,7 +26,7 @@ public class DocumentValueOnSubscribe<T> implements MaybeOnSubscribe<T> {
     @Override
     public void subscribe(MaybeEmitter<T> e) throws Exception {
         EventListener eventListener = new RxSingleValueListener<>(e, mMarshaller);
-        mDocument.addSnapshotListener(eventListener);
+        mDocument.addSnapshotListener(Executor.Companion.executeThreadPoolExecutor(), eventListener);
     }
 
     private static class RxSingleValueListener<T> implements EventListener<DocumentSnapshot> {
