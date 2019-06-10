@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import br.com.autodoc.rxfirebox.Executor;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.functions.Function;
@@ -24,7 +25,7 @@ public class ListValueChangesOnSubscribe<T> implements FlowableOnSubscribe<T> {
     @Override
     public void subscribe(FlowableEmitter<T> e) throws Exception {
         EventListener eventListener = new RxSingleValueListener<>(e, mMarshaller);
-        mQuery.addSnapshotListener(eventListener);
+        mQuery.addSnapshotListener(Executor.Companion.executeThreadPoolExecutor(), eventListener);
     }
 
 

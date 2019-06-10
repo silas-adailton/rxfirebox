@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.google.firebase.storage.StorageReference;
 
+import br.com.autodoc.rxfirebox.Executor;
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
 
@@ -20,7 +21,7 @@ class UploadCompleteSubscriber implements CompletableOnSubscribe {
 
     @Override
     public void subscribe(CompletableEmitter e) throws Exception {
-        storageReference.getFile(file).addOnCompleteListener(task -> {
+        storageReference.getFile(file).addOnCompleteListener(Executor.Companion.executeThreadPoolExecutor(), task -> {
                 if (task.getException() != null)
                     e.onError(task.getException());
                 else if(task.isComplete() && task.isSuccessful())

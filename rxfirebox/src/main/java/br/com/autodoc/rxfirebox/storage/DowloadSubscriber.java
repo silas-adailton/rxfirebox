@@ -5,6 +5,7 @@ import android.net.Uri;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
 
+import br.com.autodoc.rxfirebox.Executor;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 
@@ -23,10 +24,10 @@ class DowloadSubscriber implements FlowableOnSubscribe<Dowload> {
     public void subscribe(FlowableEmitter<Dowload> emitter) throws Exception {
 
         storageReference.getFile(file)
-                .addOnSuccessListener(taskSnapshot -> emitProgress(emitter, taskSnapshot))
-                .addOnProgressListener(taskSnapshot -> emitProgress(emitter, taskSnapshot)).
+                .addOnSuccessListener(Executor.Companion.executeThreadPoolExecutor(), taskSnapshot -> emitProgress(emitter, taskSnapshot))
+                .addOnProgressListener(Executor.Companion.executeThreadPoolExecutor(), taskSnapshot -> emitProgress(emitter, taskSnapshot)).
                 addOnFailureListener(error -> emitter.onError(error.getCause())).
-                addOnCompleteListener(task -> {
+                addOnCompleteListener(Executor.Companion.executeThreadPoolExecutor(), task -> {
                     if (task.isComplete()) {
                         emitter.onComplete();
                     }

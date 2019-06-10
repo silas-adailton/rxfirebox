@@ -6,6 +6,7 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import br.com.autodoc.rxfirebox.Executor;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 
@@ -26,10 +27,10 @@ private final StorageMetadata storageMetadata;
 
         if (isLocalImage(file)) {
             storageReference.putFile(file, storageMetadata)
-                    .addOnSuccessListener(taskSnapshot -> emitProgress(emitter, taskSnapshot))
-                    .addOnProgressListener(taskSnapshot -> emitProgress(emitter, taskSnapshot)).
+                    .addOnSuccessListener(Executor.Companion.executeThreadPoolExecutor(), taskSnapshot -> emitProgress(emitter, taskSnapshot))
+                    .addOnProgressListener(Executor.Companion.executeThreadPoolExecutor(), taskSnapshot -> emitProgress(emitter, taskSnapshot)).
                     addOnFailureListener(error -> emitter.onError(error.getCause())).
-                    addOnCompleteListener(task -> {
+                    addOnCompleteListener(Executor.Companion.executeThreadPoolExecutor(), task -> {
                         if (task.isComplete()) {
                             emitter.onComplete();
                         }

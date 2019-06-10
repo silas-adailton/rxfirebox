@@ -5,6 +5,7 @@ import android.net.Uri;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import br.com.autodoc.rxfirebox.Executor;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 
@@ -24,10 +25,10 @@ class UploadSubscriber implements FlowableOnSubscribe<Upload> {
 
         if (isLocalImage(file)) {
             storageReference.putFile(file)
-                    .addOnSuccessListener(taskSnapshot -> emitProgress(emitter, taskSnapshot))
-                    .addOnProgressListener(taskSnapshot -> emitProgress(emitter, taskSnapshot)).
+                    .addOnSuccessListener(Executor.Companion.executeThreadPoolExecutor(), taskSnapshot -> emitProgress(emitter, taskSnapshot))
+                    .addOnProgressListener(Executor.Companion.executeThreadPoolExecutor(), taskSnapshot -> emitProgress(emitter, taskSnapshot)).
                     addOnFailureListener(error -> emitter.onError(error.getCause())).
-                    addOnCompleteListener(task -> {
+                    addOnCompleteListener(Executor.Companion.executeThreadPoolExecutor(), task -> {
                         if (task.isComplete()) {
                             emitter.onComplete();
                         }
