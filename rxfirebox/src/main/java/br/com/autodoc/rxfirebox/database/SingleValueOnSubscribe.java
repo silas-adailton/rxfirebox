@@ -24,7 +24,7 @@ public class SingleValueOnSubscribe<T> implements MaybeOnSubscribe<T> {
 
     @Override
     public void subscribe(MaybeEmitter<T> e) throws Exception {
-        listener = new RxSingleValueListener<>(e, mMarshaller)
+        listener = new RxSingleValueListener<>(e, mMarshaller);
         mQuery.addListenerForSingleValueEvent(listener);
     }
 
