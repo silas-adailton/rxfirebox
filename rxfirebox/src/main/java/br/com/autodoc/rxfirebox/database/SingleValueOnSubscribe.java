@@ -14,7 +14,6 @@ public class SingleValueOnSubscribe<T> implements MaybeOnSubscribe<T> {
 
     private Query mQuery;
     private Function<DataSnapshot, T> mMarshaller;
-    private ValueEventListener listener;
 
 
     public SingleValueOnSubscribe(Query query, Function<DataSnapshot, T> marshaller) {
@@ -24,12 +23,11 @@ public class SingleValueOnSubscribe<T> implements MaybeOnSubscribe<T> {
 
     @Override
     public void subscribe(MaybeEmitter<T> e) throws Exception {
-        listener = new RxSingleValueListener<>(e, mMarshaller);
-        mQuery.addListenerForSingleValueEvent(listener);
+        mQuery.addListenerForSingleValueEvent(new RxSingleValueListener<>(e, mMarshaller));
     }
 
 
-    private class RxSingleValueListener<T> implements ValueEventListener {
+    private static class RxSingleValueListener<T> implements ValueEventListener {
 
         private final MaybeEmitter<T> subscriber;
         private final Function<DataSnapshot, T> marshaller;
@@ -41,25 +39,20 @@ public class SingleValueOnSubscribe<T> implements MaybeOnSubscribe<T> {
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-
             try {
                 if(null != marshaller.apply(dataSnapshot)) {
                     subscriber.onSuccess(marshaller.apply(dataSnapshot));
-                    mQuery.removeEventListener(listener);
                 }
             } catch (Exception e) {
                 subscriber.onError(e);
-                mQuery.removeEventListener(listener);
             }
 
             subscriber.onComplete();
-            mQuery.removeEventListener(listener);
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
             subscriber.onError(databaseError.toException());
-            mQuery.removeEventListener(listener);
         }
     }
 }
