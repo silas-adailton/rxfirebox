@@ -45,9 +45,11 @@ public class SingleValueOnSubscribe<T> implements MaybeOnSubscribe<T> {
             try {
                 if(null != marshaller.apply(dataSnapshot)) {
                     subscriber.onSuccess(marshaller.apply(dataSnapshot));
+                    mQuery.removeEventListener(listener);
                 }
             } catch (Exception e) {
                 subscriber.onError(e);
+                mQuery.removeEventListener(listener);
             }
 
             subscriber.onComplete();
