@@ -42,21 +42,23 @@ public class SingleValueOnSubscribe<T> implements MaybeOnSubscribe<T> {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
 
+            query.removeEventListener(this);
+            
             try {
-                if(null != marshaller.apply(dataSnapshot))
-                subscriber.onSuccess(marshaller.apply(dataSnapshot));
+                if(null != marshaller.apply(dataSnapshot)) {
+                    subscriber.onSuccess(marshaller.apply(dataSnapshot));
+                }
             } catch (Exception e) {
                 subscriber.onError(e);
             }
 
             subscriber.onComplete();
-            query.removeEventListener(this);
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            subscriber.onError(databaseError.toException());
             query.removeEventListener(this);
+            subscriber.onError(databaseError.toException());
         }
     }
 }
