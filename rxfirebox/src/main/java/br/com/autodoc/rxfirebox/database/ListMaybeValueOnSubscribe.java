@@ -6,24 +6,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import io.reactivex.FlowableEmitter;
-import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.MaybeEmitter;
+import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.functions.Function;
 
-public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
+public class ListMaybeValueOnSubscribe<T> implements MaybeOnSubscribe<T> {
 
     private Query mQuery;
     private Function<DataSnapshot, T> mMarshaller;
     private final boolean mEnableRealTimeListener;
 
-    public ListValueOnSubscribe(Query query, Function<DataSnapshot, T> marshaller) {
+    public ListMaybeValueOnSubscribe(Query query, Function<DataSnapshot, T> marshaller) {
         mQuery = query;
         mMarshaller = marshaller;
         mEnableRealTimeListener = false;
     }
 
-    public ListValueOnSubscribe(Query query, Function<DataSnapshot, T> marshaller,
-                                boolean enableRealTimeListener) {
+    public ListMaybeValueOnSubscribe(Query query, Function<DataSnapshot, T> marshaller,
+                                     boolean enableRealTimeListener) {
         mQuery = query;
         mMarshaller = marshaller;
         mEnableRealTimeListener = enableRealTimeListener;
@@ -31,7 +31,7 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
     }
 
     @Override
-    public void subscribe(FlowableEmitter<T> e) throws Exception {
+    public void subscribe(MaybeEmitter<T> e) throws Exception {
         ValueEventListener listener = new RxSingleValueListener<>(e, mMarshaller);
         e.setCancellable(() -> mQuery.removeEventListener(listener));
 
@@ -46,10 +46,10 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
 
     private static class RxSingleValueListener<T> implements ValueEventListener {
 
-        private final FlowableEmitter<T> subscriber;
+        private final MaybeEmitter<T> subscriber;
         private final Function<DataSnapshot, T> marshaller;
 
-        RxSingleValueListener(FlowableEmitter<T> subscriber, Function<DataSnapshot, T> marshaller) {
+        RxSingleValueListener(MaybeEmitter<T> subscriber, Function<DataSnapshot, T> marshaller) {
             this.subscriber = subscriber;
             this.marshaller = marshaller;
         }
@@ -59,7 +59,7 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
 
             try {
                 if (null != marshaller.apply(dataSnapshot))
-                    subscriber.onNext(marshaller.apply(dataSnapshot));
+                    subscriber.onSuccess(marshaller.apply(dataSnapshot));
             } catch (Exception e) {
                 subscriber.onError(e);
             }
