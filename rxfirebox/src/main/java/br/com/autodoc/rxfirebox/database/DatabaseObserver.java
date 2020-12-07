@@ -20,7 +20,7 @@ public class DatabaseObserver {
         useListener = false;
     }
 
-    public DatabaseObserver(boolean useListener, boolean enableRealTimeListener) {
+    public DatabaseObserver(boolean useListener) {
         this.useListener = useListener;
     }
 

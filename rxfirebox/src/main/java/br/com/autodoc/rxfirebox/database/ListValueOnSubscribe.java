@@ -16,6 +16,11 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
     private Function<DataSnapshot, T> mMarshaller;
     private final boolean mEnableRealTimeListener;
 
+    public ListValueOnSubscribe(Query query, Function<DataSnapshot, T> marshaller) {
+        mQuery = query;
+        mMarshaller = marshaller;
+        mEnableRealTimeListener = false;
+    }
 
     public ListValueOnSubscribe(Query query, Function<DataSnapshot, T> marshaller,
                                 boolean enableRealTimeListener) {
@@ -32,6 +37,7 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
 
         if (mEnableRealTimeListener) {
             mQuery.addValueEventListener(listener);
+            return;
         }
         mQuery.addListenerForSingleValueEvent(listener);
     }
