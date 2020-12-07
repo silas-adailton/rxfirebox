@@ -60,6 +60,7 @@ public class DatabaseObserver {
         return Flowable.create(new ListValueChangesOnSubscribe<>(query, marshaller), BackpressureStrategy.BUFFER);
     }
 
+
     /**
      * Create value in database
      *
