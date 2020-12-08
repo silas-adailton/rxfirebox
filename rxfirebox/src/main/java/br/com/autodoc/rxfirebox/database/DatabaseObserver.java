@@ -56,8 +56,8 @@ public class DatabaseObserver {
      * @param <T> Type of the return
      * @return return type converted in marshaller
      */
-    public <T> Flowable<T> list(Query query, Function<DataSnapshot, T> marshaller, boolean enableRealTimeListener) {
-        return Flowable.create(new ListValueOnSubscribe<>(query, marshaller, enableRealTimeListener), BackpressureStrategy.BUFFER);
+    public <T> Flowable<T> list(Query query, Function<DataSnapshot, T> marshaller) {
+        return Flowable.create(new ListValueOnSubscribe<>(query, marshaller), BackpressureStrategy.BUFFER);
     }
 
     /**

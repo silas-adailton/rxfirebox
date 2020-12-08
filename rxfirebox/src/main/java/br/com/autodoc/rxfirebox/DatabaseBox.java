@@ -71,6 +71,19 @@ public class DatabaseBox<T> implements Box {
         };
     }
 
+    public Function<DataSnapshot, Map<String, Object>> toSingleMap() {
+
+        return dataSnapshot -> {
+
+            Map<String, Object> stringMap = new HashMap<>();
+
+            if (dataSnapshot.hasChildren())
+                stringMap = (Map<String, Object>) dataSnapshot.getValue();
+
+            return stringMap;
+        };
+    }
+
     @Override
     public Function<DataSnapshot, T> toFirst() {
 
