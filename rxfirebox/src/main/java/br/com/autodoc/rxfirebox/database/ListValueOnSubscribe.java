@@ -35,12 +35,14 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
         ValueEventListener listener = new RxSingleValueListener<>(e, mMarshaller);
         e.setCancellable(() -> mQuery.removeEventListener(listener));
 
-        if (mEnableRealTimeListener) {
-            mQuery.addValueEventListener(listener);
-            return;
-        }
+//        if (mEnableRealTimeListener) {
+//            mQuery.addValueEventListener(listener);
+//            return;
+//        }
+//
+//        mQuery.addListenerForSingleValueEvent(listener);
 
-        mQuery.addListenerForSingleValueEvent(listener);
+        mQuery.addValueEventListener(listener);
     }
 
 
