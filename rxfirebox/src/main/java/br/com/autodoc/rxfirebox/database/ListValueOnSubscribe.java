@@ -6,6 +6,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.functions.Function;
@@ -32,17 +34,17 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
 
     @Override
     public void subscribe(FlowableEmitter<T> e) throws Exception {
-        ValueEventListener listener = new RxSingleValueListener<>(e, mMarshaller);
-        e.setCancellable(() -> mQuery.removeEventListener(listener));
+        ValueEventListener listener = new RxSingleValueListener<>(e, mMarshaller, mEnableRealTimeListener);
+        e.setCancellable(() -> {
+            this.mQuery.removeEventListener(listener);
+        });
 
-//        if (mEnableRealTimeListener) {
-//            mQuery.addValueEventListener(listener);
-//            return;
-//        }
-//
-//        mQuery.addListenerForSingleValueEvent(listener);
+        if (this.mEnableRealTimeListener) {
+            this.mQuery.addValueEventListener(listener);
+            return;
+        }
 
-        mQuery.addValueEventListener(listener);
+        this.mQuery.addValueEventListener(listener);
     }
 
 
@@ -50,29 +52,33 @@ public class ListValueOnSubscribe<T> implements FlowableOnSubscribe<T> {
 
         private final FlowableEmitter<T> subscriber;
         private final Function<DataSnapshot, T> marshaller;
+        private final boolean mEnableRealTimeListener;
 
-        RxSingleValueListener(FlowableEmitter<T> subscriber, Function<DataSnapshot, T> marshaller) {
+        RxSingleValueListener(FlowableEmitter<T> subscriber, Function<DataSnapshot, T> marshaller, boolean enableRealTimeListener) {
             this.subscriber = subscriber;
             this.marshaller = marshaller;
+            this.mEnableRealTimeListener = enableRealTimeListener;
         }
 
         @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
+        public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
 
             try {
                 if (null != marshaller.apply(dataSnapshot))
-                    subscriber.onNext(marshaller.apply(dataSnapshot));
+                    this.subscriber.onNext(this.marshaller.apply(dataSnapshot));
             } catch (Exception e) {
-                subscriber.onError(e);
+                this.subscriber.onError(e);
             }
 
-            subscriber.onComplete();
+            if(!mEnableRealTimeListener){
+                this.subscriber.onComplete();
+            }
 
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            subscriber.onError(databaseError.toException());
+            this.subscriber.onError(databaseError.toException());
         }
     }
 }
